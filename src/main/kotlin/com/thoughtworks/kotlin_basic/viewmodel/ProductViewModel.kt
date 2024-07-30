@@ -25,10 +25,10 @@ class ProductViewModel() {
         }
     }
 
-    private fun getStock(inventories: List<Inventory>) {
+    fun getStock(inventories: List<Inventory>) {
     }
 
-    private fun getPrice(product: Product, inventories: List<Inventory>) {
+    fun getPrice(product: Product, inventories: List<Inventory>) {
     }
 
     private fun aggregateProducts() {
