@@ -22,6 +22,16 @@ class ColumnConverterTest {
     }
 
     @Test
+    fun `Parameters (676, 2) should return (ZZ, AAA)`() {
+        assertArrayEquals(arrayOf("ZZ", "AAA"), columnUtil.convertToAlphabeticalLabels(676, 2))
+    }
+
+    @Test
+    fun `Parameters (17572, 5) should return (ZZV, ZZW, ZZX, ZZY, ZZZ)`() {
+        assertArrayEquals(arrayOf("ZZV", "ZZW", "ZZX", "ZZY", "ZZZ"), columnUtil.convertToAlphabeticalLabels(17572, 5))
+    }
+
+    @Test
     fun `Up to ZZZ, beyond which, an error should be thrown`() {
         assertThrows(MaxSizeExceededException::class.java) {
             columnUtil.convertToAlphabeticalLabels(17576, 2)
