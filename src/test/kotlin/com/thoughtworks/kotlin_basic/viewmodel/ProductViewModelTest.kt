@@ -1,9 +1,7 @@
 package com.thoughtworks.kotlin_basic.viewmodel
 
-import com.thoughtworks.kotlin_basic.exceptions.MaxSizeExceededException
 import com.thoughtworks.kotlin_basic.model.Inventory
 import com.thoughtworks.kotlin_basic.model.Product
-import com.thoughtworks.kotlin_basic.util.ColumnUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -110,14 +108,26 @@ class ProductViewModelTest {
 
     @Test
     fun `The stock of a product equals the sum of stocks in various regions`() {
-        val productInventories = inventories.filter { it.sku == "ABC123" }
-        assertEquals(200, viewModel.getStock(productInventories))
+        val productInventories = listOf(
+            Inventory(
+                id = "1",
+                sku = "ABC123",
+                zone = "CN_NORTH",
+                quantity = 120,
+            ),
+            Inventory(
+                id = "2",
+                sku = "ABC123",
+                zone = "US_WEST",
+                quantity = 80,
+            ),
+        )
+        assertEquals(200, viewModel.getStockByInventories(productInventories))
     }
 
     @Test
     fun `If the product is normal (type is NORMAL), the actual price is equal to the original price`() {
-        val productInventories = inventories.filter { it.sku == "ABC123" }
-        assertEquals(299.99, viewModel.getPrice(products[0], productInventories))
+        assertEquals(299.99, viewModel.getProductPrice(products[0], 15))
     }
 
     @Test
@@ -130,21 +140,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 50,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 60,
-            ),
-        )
-        assertEquals(199.0, viewModel.getPrice(product, productInventories))
+        assertEquals(199.0, viewModel.getProductPrice(product, 110))
     }
 
     @Test
@@ -157,21 +153,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 50,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 51,
-            ),
-        )
-        assertEquals(199.0, viewModel.getPrice(product, productInventories))
+        assertEquals(199.0, viewModel.getProductPrice(product, 101))
     }
 
     @Test
@@ -184,21 +166,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 50,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 50,
-            ),
-        )
-        assertEquals(238.8, viewModel.getPrice(product, productInventories))
+        assertEquals(238.8, viewModel.getProductPrice(product, 100))
     }
 
     @Test
@@ -211,21 +179,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 50,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 49,
-            ),
-        )
-        assertEquals(238.8, viewModel.getPrice(product, productInventories))
+        assertEquals(238.8, viewModel.getProductPrice(product, 99))
     }
 
     @Test
@@ -238,21 +192,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 15,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 16,
-            ),
-        )
-        assertEquals(238.8, viewModel.getPrice(product, productInventories))
+        assertEquals(238.8, viewModel.getProductPrice(product, 31))
     }
 
     @Test
@@ -265,21 +205,7 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 15,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 15,
-            ),
-        )
-        assertEquals(298.5, viewModel.getPrice(product, productInventories))
+        assertEquals(298.5, viewModel.getProductPrice(product, 30))
     }
 
     @Test
@@ -292,21 +218,8 @@ class ProductViewModelTest {
             type = Product.ProductType.HIGH_DEMAND,
             image = "image4.jpg",
         );
-        val productInventories = listOf(
-            Inventory(
-                id = "5",
-                sku = "JKL012",
-                zone = "CN_SOUTH",
-                quantity = 15,
-            ),
-            Inventory(
-                id = "6",
-                sku = "JKL012",
-                zone = "US_EAST",
-                quantity = 14,
-            ),
-        )
-        assertEquals(298.5, viewModel.getPrice(product, productInventories))
+
+        assertEquals(298.5, viewModel.getProductPrice(product, 29))
     }
 
 }
