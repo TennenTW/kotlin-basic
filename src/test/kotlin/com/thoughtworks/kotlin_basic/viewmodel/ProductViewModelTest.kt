@@ -2,8 +2,8 @@ package com.thoughtworks.kotlin_basic.viewmodel
 
 import com.thoughtworks.kotlin_basic.model.Inventory
 import com.thoughtworks.kotlin_basic.model.Product
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ProductViewModelTest {
     private val viewModel = ProductViewModel()
