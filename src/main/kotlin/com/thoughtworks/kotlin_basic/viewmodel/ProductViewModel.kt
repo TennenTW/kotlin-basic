@@ -7,9 +7,16 @@ import com.thoughtworks.kotlin_basic.service.ProductService
 import kotlinx.coroutines.*
 
 class ProductViewModel() {
-    private var products: List<Product>? = null
-    private var inventories: List<Inventory>? = null
+    var products: List<Product>? = null
+    var inventories: List<Inventory>? = null
     var productItems: List<ProductItem>? = null
+    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        onError(throwable.localizedMessage)
+    }
+
+    private fun onError(message: String) {
+        println("Exception: $message")
+    }
 
     private fun getProducts(): Deferred<Unit> {
         return CoroutineScope(Dispatchers.IO).async {
@@ -17,7 +24,7 @@ class ProductViewModel() {
                 val response = ProductService.apiService.getProducts()
                 products = response.body()
             } catch (e: Exception) {
-                println(e.localizedMessage)
+                onError(e.localizedMessage)
             }
         }
     }
@@ -28,7 +35,7 @@ class ProductViewModel() {
                 val response = ProductService.apiService.getInventories()
                 inventories = response.body()
             } catch (e: Exception) {
-                println(e.localizedMessage)
+                onError(e.localizedMessage)
             }
         }
     }
@@ -53,7 +60,7 @@ class ProductViewModel() {
         return inventories.sumOf { it.quantity ?: 0 }
     }
 
-    private fun aggregateProducts() {
+    fun aggregateProducts() {
         if (products == null || inventories == null) {
             throw Exception("Required data is not provided")
         }

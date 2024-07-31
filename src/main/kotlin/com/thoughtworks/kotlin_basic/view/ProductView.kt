@@ -2,10 +2,14 @@ package com.thoughtworks.kotlin_basic.view
 
 import com.thoughtworks.kotlin_basic.viewmodel.ProductViewModel
 
-object ProductView {
+interface ProductDisplayer {
+    fun showProductsInfo()
+}
+
+object ProductView: ProductDisplayer {
     private val productViewModel = ProductViewModel()
 
-    fun showProductsInfo() {
+    override fun showProductsInfo() {
         productViewModel.getProductWithInventories()
         productViewModel.productItems?.forEach {
             println(it.getDisplayString())

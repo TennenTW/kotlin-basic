@@ -2,8 +2,8 @@ package com.thoughtworks.kotlin_basic.viewmodel
 
 import com.thoughtworks.kotlin_basic.model.Inventory
 import com.thoughtworks.kotlin_basic.model.Product
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import com.thoughtworks.kotlin_basic.model.ProductItem
+import kotlin.test.*
 
 class ProductViewModelTest {
     private val viewModel = ProductViewModel()
@@ -84,7 +84,7 @@ class ProductViewModelTest {
             id = "6",
             sku = "JKL012",
             zone = "US_EAST",
-            quantity = 20,
+            quantity = 13,
         ),
         Inventory(
             id = "7",
@@ -97,12 +97,6 @@ class ProductViewModelTest {
             sku = "MNO345",
             zone = "AU_SOUTH",
             quantity = 12,
-        ),
-        Inventory(
-            id = "9",
-            sku = "MNO345",
-            zone = "AU_SOUTH",
-            quantity = 50,
         ),
     )
 
@@ -220,6 +214,51 @@ class ProductViewModelTest {
         );
 
         assertEquals(298.5, viewModel.getProductPrice(product, 29))
+    }
+
+    @Test
+    fun `aggregate products success`() {
+        viewModel.products = products
+        viewModel.inventories = inventories
+        viewModel.aggregateProducts()
+        val result = listOf(
+            ProductItem(
+                sku = "ABC123",
+                name = "Electronic Watch",
+                price = 299.99,
+                stock = 200,
+                image = "image1.jpg"
+            ),
+            ProductItem(
+                sku = "DEF456",
+                name = "Sports Shoes",
+                price = 499.6,
+                stock = 200,
+                image = "image2.jpg"
+            ),
+            ProductItem(
+                sku = "GHI789",
+                name = "Book \"Exploring the Universe\"",
+                price = 89.0,
+                stock = 150,
+                image = "image3.jpg"
+            ),
+            ProductItem(
+                sku = "JKL012",
+                name = "Bluetooth Headphones",
+                price = 298.5,
+                stock = 23,
+                image = "image4.jpg"
+            ),
+            ProductItem(
+                sku = "MNO345",
+                name = "Smart Band",
+                price = 179.34,
+                stock = 77,
+                image = "image5.jpg"
+            ),
+        )
+        assertContentEquals(result, viewModel.productItems)
     }
 
 }

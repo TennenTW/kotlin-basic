@@ -1,6 +1,6 @@
 package com.thoughtworks.kotlin_basic.model
 
-class ProductItem (
+data class ProductItem (
     private val sku: String,
     private val name: String,
     private val price: Double,
