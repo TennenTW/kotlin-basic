@@ -4,7 +4,7 @@ import com.thoughtworks.kotlin_basic.exceptions.MaxSizeExceededException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class ColumnConverterTest {
+class ColumnUtilTest {
     private val columnUtil = ColumnUtil()
     @Test
     fun `Parameters (1, 1) should return (A)`() {
