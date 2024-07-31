@@ -4,26 +4,32 @@ import com.thoughtworks.kotlin_basic.model.Inventory
 import com.thoughtworks.kotlin_basic.model.Product
 import com.thoughtworks.kotlin_basic.model.ProductItem
 import com.thoughtworks.kotlin_basic.service.ProductService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ProductViewModel() {
     private var products: List<Product>? = null
     private var inventories: List<Inventory>? = null
-    private var productItems: List<ProductItem>? = null
+    var productItems: List<ProductItem>? = null
 
-    private fun getProducts() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = ProductService.apiService.getProducts()
-            products = response.body()
+    private fun getProducts(): Deferred<Unit> {
+        return CoroutineScope(Dispatchers.IO).async {
+            try {
+                val response = ProductService.apiService.getProducts()
+                products = response.body()
+            } catch (e: Exception) {
+                println(e.localizedMessage)
+            }
         }
     }
 
-    private fun getInventories() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = ProductService.apiService.getInventories()
-            inventories = response.body()
+    private fun getInventories(): Deferred<Unit> {
+        return CoroutineScope(Dispatchers.IO).async {
+            try {
+                val response = ProductService.apiService.getInventories()
+                inventories = response.body()
+            } catch (e: Exception) {
+                println(e.localizedMessage)
+            }
         }
     }
 
@@ -48,6 +54,9 @@ class ProductViewModel() {
     }
 
     private fun aggregateProducts() {
+        if (products == null || inventories == null) {
+            throw Exception("Required data is not provided")
+        }
         val inventoriesMapBySKU = inventories?.groupBy { it.sku ?: "" }
         productItems = products?.map {
             val sku = it.sku ?: ""
@@ -59,6 +68,16 @@ class ProductViewModel() {
                 stock = stock,
                 image = it.image ?: ""
             )
+        }
+    }
+
+    fun getProductWithInventories() {
+        runBlocking {
+            awaitAll(
+                getProducts(),
+                getInventories(),
+            )
+            aggregateProducts()
         }
     }
 
